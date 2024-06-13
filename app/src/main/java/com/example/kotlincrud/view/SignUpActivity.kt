@@ -1,11 +1,9 @@
-package com.example.kotlincrud
+package com.example.kotlincrud.view
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.kotlincrud.databinding.ActivitySignUpBinding
 
 class SignUpActivity : AppCompatActivity() {
@@ -17,7 +15,7 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.logIn.setOnClickListener(){
-            startActivity(Intent(this@SignUpActivity,LoginActivity::class.java))
+            startActivity(Intent(this@SignUpActivity, LoginActivity::class.java))
         }
 
     }
