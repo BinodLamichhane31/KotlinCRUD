@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "312403116094",
+    "firebase_url": "https://kotlincrud-7d04b-default-rtdb.firebaseio.com",
+    "project_id": "kotlincrud-7d04b",
+    "storage_bucket": "kotlincrud-7d04b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:312403116094:android:f8ffe240d0b1c4e799916f",
+        "android_client_info": {
+          "package_name": "com.example.kotlincrud"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQKS5LXYb2zOOxykf4S2RlHQX2-ahwMUE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
