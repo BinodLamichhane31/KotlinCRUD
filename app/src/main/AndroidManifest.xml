@@ -17,7 +17,7 @@
         android:theme="@style/Theme.KotlinCrud"
         tools:targetApi="31">
         <activity
-            android:name=".view.UpdateProductActivity"
+            android:name=".view.UpdateNoteActivity"
             android:exported="false" />
         <activity
             android:name=".view.AddNoteActivity"
