@@ -8,17 +8,21 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlincrud.databinding.ActivitySignUpBinding
 import com.example.kotlincrud.model.UserModel
+import com.example.kotlincrud.utils.LoadingUtils
 import com.example.kotlincrud.viewmodel.UserViewModel
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
     private val userViewModel: UserViewModel by viewModels()
+    lateinit var loadingUtils: LoadingUtils
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        loadingUtils = LoadingUtils(this)
 
         binding.logIn.setOnClickListener(){
             startActivity(Intent(this@SignUpActivity, LoginActivity::class.java))
@@ -34,7 +38,9 @@ class SignUpActivity : AppCompatActivity() {
             if(name.isNotEmpty()&&email.isNotEmpty()&&phone.isNotEmpty()&&password.isNotEmpty()&&confirmPassword.isNotEmpty()){
                 if(password==confirmPassword){
                     val user = UserModel(name=name, email = email, phone = phone)
+                    loadingUtils.showLoading()
                     userViewModel.registerUser(user,password){success,message->
+                        loadingUtils.dismiss()
                         if(success){
                             startActivity(Intent(this@SignUpActivity,LoginActivity::class.java))
                             Toast.makeText(applicationContext,message,Toast.LENGTH_SHORT).show()

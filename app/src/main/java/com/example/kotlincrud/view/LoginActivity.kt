@@ -8,16 +8,19 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import com.example.kotlincrud.databinding.ActivityLoginBinding
+import com.example.kotlincrud.utils.LoadingUtils
 import com.example.kotlincrud.viewmodel.UserViewModel
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val userViewModel: UserViewModel by viewModels()
+    private lateinit var loadingUtils: LoadingUtils
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        loadingUtils = LoadingUtils(this)
 
         binding.signUp.setOnClickListener(){
             startActivity(Intent(this@LoginActivity, SignUpActivity::class.java))
@@ -28,14 +31,17 @@ class LoginActivity : AppCompatActivity() {
             val password = binding.passwordLogin.text.toString()
 
             if(email.isNotEmpty()&&password.isNotEmpty()){
+                loadingUtils.showLoading()
                 userViewModel.loginUser(email,password){success,message->
+                    loadingUtils.showLoading()
                     if(success){
                         Toast.makeText(applicationContext,message,Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this@LoginActivity,DashboardActivity::class.java))
+                        finish()
                     }
                     else{
                         Toast.makeText(applicationContext,message,Toast.LENGTH_SHORT).show()
-
-                    }
+                 }
                 }
 
             }

@@ -3,6 +3,9 @@ package com.example.kotlincrud.repository.impl
 import com.example.kotlincrud.model.UserModel
 import com.example.kotlincrud.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
@@ -33,7 +36,13 @@ class UserRepositoryImpl:UserRepository {
 
                 }
                 else{
-                    callback(false,"User authentication failed")
+                    val errorMessage = when (it.exception) {
+                        is FirebaseAuthWeakPasswordException -> "Weak password. Please choose a stronger password."
+                        is FirebaseAuthInvalidCredentialsException -> "Invalid email format."
+                        is FirebaseAuthUserCollisionException -> "Email already in use."
+                        else -> "User authentication failed: ${it.exception?.message}"
+                    }
+                    callback(false, errorMessage)
                 }
             }
     }
@@ -45,7 +54,7 @@ class UserRepositoryImpl:UserRepository {
                     callback(true,"Login Successful")
                 }
                 else{
-                    callback(true,"Login Failed")
+                    callback(true,it.exception?.message)
                 }
             }
     }
