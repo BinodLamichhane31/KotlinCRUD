@@ -31,9 +31,7 @@ class LoginActivity : AppCompatActivity() {
             val password = binding.passwordLogin.text.toString()
 
             if(email.isNotEmpty()&&password.isNotEmpty()){
-                loadingUtils.showLoading()
                 userViewModel.loginUser(email,password){success,message->
-                    loadingUtils.showLoading()
                     if(success){
                         Toast.makeText(applicationContext,message,Toast.LENGTH_SHORT).show()
                         startActivity(Intent(this@LoginActivity,DashboardActivity::class.java))
