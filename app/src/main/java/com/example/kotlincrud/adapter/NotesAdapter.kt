@@ -40,6 +40,8 @@ ArrayList<NotesModel>): RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
+        val note = notes[position]
+
         holder.title.text = notes[position].title
         holder.description.text = notes[position].description
         var imageUrl = notes[position].imageUrl
@@ -54,7 +56,7 @@ ArrayList<NotesModel>): RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
         })
         holder.button.setOnClickListener {
             var intent = Intent(context, UpdateNoteActivity::class.java)
-            intent.putExtra("notes",notes[position])
+            intent.putExtra("note",note)
             context.startActivity(intent)
         }
 

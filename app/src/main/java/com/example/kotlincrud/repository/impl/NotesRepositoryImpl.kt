@@ -49,7 +49,6 @@ class NotesRepositoryImpl : NotesRepository {
                     )
                     databaseRef.child(uid).child(noteId).setValue(newNote)
                         .addOnSuccessListener {
-                            callback(true, "Note added successfully.")
                         }
                         .addOnFailureListener { exception ->
                             callback(false, exception.message)
@@ -61,7 +60,6 @@ class NotesRepositoryImpl : NotesRepository {
                 callback(false, task.exception?.message)
             }
         }.addOnFailureListener { exception ->
-            Log.e("NotesRepositoryImpl", "Image upload failed: ${exception.message}")
             callback(false, exception.message)
         }
 
@@ -93,11 +91,56 @@ class NotesRepositoryImpl : NotesRepository {
 
     override fun updateNote(
         notesModel: NotesModel,
-        imageData: ByteIterator,
+        imageData: ByteArray,
         callback: (Boolean, String?) -> Unit
     ) {
-        TODO("Not yet implemented")
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            callback(false, "User not authenticated")
+            return
+        }
+
+        val uid = currentUser.uid
+        val noteId = notesModel.id
+        val noteRef = databaseRef.child(uid).child(noteId)
+        val imageRef = storageRef.child(uid).child(noteId)
+
+        if (imageData.isNotEmpty()) {
+            // Update both note data and image
+            val uploadTask = imageRef.putBytes(imageData)
+
+            uploadTask.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    imageRef.downloadUrl.addOnSuccessListener { uri ->
+                        val updatedNote = notesModel.copy(imageUrl = uri.toString())
+                        noteRef.setValue(updatedNote)
+                            .addOnSuccessListener {
+                                callback(true, null)
+                            }
+                            .addOnFailureListener { exception ->
+                                callback(false, exception.message)
+                            }
+                    }.addOnFailureListener { exception ->
+                        callback(false, exception.message)
+                    }
+                } else {
+                    callback(false, task.exception?.message)
+                }
+            }.addOnFailureListener { exception ->
+                callback(false, exception.message)
+            }
+        } else {
+            // Only update note data, not the image
+            noteRef.setValue(notesModel)
+                .addOnSuccessListener {
+                    callback(true, null)
+                }
+                .addOnFailureListener { exception ->
+                    callback(false, exception.message)
+                }
+        }
     }
+
 
     override fun deleteNote(noteId: String, callback: (Boolean, String?) -> Unit) {
         TODO("Not yet implemented")
