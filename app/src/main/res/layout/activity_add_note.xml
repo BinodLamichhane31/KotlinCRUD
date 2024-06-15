@@ -67,7 +67,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textInputLayout"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@android:drawable/ic_input_add" />
+        tools:src="@android:drawable/ic_input_add" />
 
     <TextView
         android:id="@+id/textView"

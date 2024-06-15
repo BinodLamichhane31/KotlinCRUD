@@ -27,6 +27,7 @@ ArrayList<NotesModel>): RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
         val button:ImageButton = binding.editButton
         val progressBar:ProgressBar = binding.progressBar
 
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder {
@@ -57,5 +58,9 @@ ArrayList<NotesModel>): RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
             context.startActivity(intent)
         }
 
+    }
+    fun updateNotes(newNotes: ArrayList<NotesModel>) {
+        notes = newNotes
+        notifyDataSetChanged()
     }
 }

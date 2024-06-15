@@ -7,8 +7,11 @@ import com.example.kotlincrud.repository.NotesRepository
 import com.example.kotlincrud.repository.UserRepository
 import com.google.android.gms.auth.api.signin.internal.Storage
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
@@ -66,7 +69,26 @@ class NotesRepositoryImpl : NotesRepository {
 
 
     override fun getNote(callback: (List<NotesModel>) -> Unit) {
-        TODO("Not yet implemented")
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            callback(emptyList())
+            return
+        }
+        val uid = currentUser.uid
+        databaseRef.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val notesList = mutableListOf<NotesModel>()
+                for (noteSnapshot in dataSnapshot.children) {
+                    val note = noteSnapshot.getValue(NotesModel::class.java)
+                    note?.let { notesList.add(it) }
+                }
+                callback(notesList)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                callback(emptyList())
+            }
+        })
     }
 
     override fun updateNote(
