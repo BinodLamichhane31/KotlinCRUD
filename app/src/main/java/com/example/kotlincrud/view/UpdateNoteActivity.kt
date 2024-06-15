@@ -31,7 +31,6 @@ class UpdateNoteActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val auth = FirebaseAuth.getInstance()
         databaseRef = FirebaseDatabase.getInstance().reference.child("notes")
         storageRef = FirebaseStorage.getInstance().reference.child("note_images")
         binding = ActivityUpdateNoteBinding.inflate(layoutInflater)

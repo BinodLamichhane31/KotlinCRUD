@@ -24,7 +24,8 @@ ArrayList<NotesModel>): RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
         var title:TextView = binding.titleTextView
         val description:TextView = binding.descriptionTextView
         val image:ImageView = binding.imageView
-        val button:ImageButton = binding.editButton
+        val editButton:ImageButton = binding.editButton
+        val deleteButton:ImageButton = binding.deleteButton
         val progressBar:ProgressBar = binding.progressBar
 
 
@@ -54,11 +55,13 @@ ArrayList<NotesModel>): RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
             }
 
         })
-        holder.button.setOnClickListener {
+        holder.editButton.setOnClickListener {
             var intent = Intent(context, UpdateNoteActivity::class.java)
             intent.putExtra("note",note)
             context.startActivity(intent)
         }
+
+
 
     }
     fun updateNotes(newNotes: ArrayList<NotesModel>) {
