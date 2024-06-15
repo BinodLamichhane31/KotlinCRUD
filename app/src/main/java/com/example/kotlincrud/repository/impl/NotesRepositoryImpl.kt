@@ -1,5 +1,6 @@
 package com.example.kotlincrud.repository.impl
 
+import android.util.Log
 import com.example.kotlincrud.model.NotesModel
 import com.example.kotlincrud.model.UserModel
 import com.example.kotlincrud.repository.NotesRepository
@@ -26,35 +27,43 @@ class NotesRepositoryImpl : NotesRepository {
         val currentUser = auth.currentUser
         if (currentUser == null) {
             callback(false, "User not authenticated")
+            return
         }
-        val uid = currentUser?.uid ?: ""
-        val noteId = databaseRef.child(uid).push().key ?: ""
-        val uploadTask = storageRef.putBytes(imageData)
 
-        uploadTask.addOnCompleteListener() {
-            if (it.isSuccessful) {
-                storageRef.downloadUrl.addOnSuccessListener { uri ->
+        val uid = currentUser.uid
+        val noteId = databaseRef.child(uid).push().key ?: ""
+        val imageRef = storageRef.child(uid).child(noteId)
+        val uploadTask = imageRef.putBytes(imageData)
+
+        uploadTask.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                imageRef.downloadUrl.addOnSuccessListener { uri ->
                     val newNote = NotesModel(
                         id = noteId,
                         title = notesModel.title,
                         description = notesModel.description,
-                        imageUrl = uri.toString()
+                        imageUrl = uri.toString(),
                     )
+                    databaseRef.child(uid).child(noteId).setValue(newNote)
+                        .addOnSuccessListener {
+                            callback(true, "Note added successfully.")
+                        }
+                        .addOnFailureListener { exception ->
+                            callback(false, exception.message)
+                        }
+                }.addOnFailureListener { exception ->
+                    callback(false, exception.message)
                 }
-                databaseRef.child(uid).child(noteId).setValue(notesModel)
-                    .addOnSuccessListener { callback(true, "Note added successfully.") }
-                    .addOnFailureListener { callback(false, it.message) }
             } else {
-                callback(false,it.exception?.message)
+                callback(false, task.exception?.message)
             }
+        }.addOnFailureListener { exception ->
+            Log.e("NotesRepositoryImpl", "Image upload failed: ${exception.message}")
+            callback(false, exception.message)
         }
 
     }
 
-
-    override fun addNote(noteId: String, callback: (Boolean, String?) -> Unit) {
-        TODO("Not yet implemented")
-    }
 
     override fun getNote(callback: (List<NotesModel>) -> Unit) {
         TODO("Not yet implemented")
@@ -65,6 +74,10 @@ class NotesRepositoryImpl : NotesRepository {
         imageData: ByteIterator,
         callback: (Boolean, String?) -> Unit
     ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteNote(noteId: String, callback: (Boolean, String?) -> Unit) {
         TODO("Not yet implemented")
     }
 
