@@ -14,7 +14,7 @@ class NotesViewModel(val notesRepository: NotesRepository):ViewModel() {
         notesRepository.getNote(callback)
 
     }
-    fun updateNote(notesModel: NotesModel, imageData:ByteArray, callback:(Boolean, String?)->Unit){
+    fun updateNote(notesModel: NotesModel, imageData: ByteArray, callback:(Boolean, String?)->Unit){
         notesRepository.updateNote(notesModel,imageData,callback)
     }
 

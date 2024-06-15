@@ -5,9 +5,9 @@ import android.os.Parcelable
 
 data class NotesModel(
     val id:String="",
-    val title:String="",
-    val description: String="",
-    val imageUrl:String=""
+    var title:String="",
+    var description: String="",
+    var imageUrl:String=""
 
 
 ):Parcelable{
